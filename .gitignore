@@ -1,0 +1,18 @@
+# .NET build output
+bin/
+obj/
+
+# User/editor files
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Logs and local temp files
+*.log
+tmp/
+temp/
+
+# Generated deployment artifacts
+artifacts/
+logs/

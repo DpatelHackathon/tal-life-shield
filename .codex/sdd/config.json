@@ -1,0 +1,22 @@
+{
+  "defaultChangeDocsPath": "docs",
+  "requiredDocuments": [
+    "SPEC.md",
+    "ACCEPTANCE_CRITERIA.md",
+    "TRACEABILITY_MATRIX.md",
+    "DEPENDENCY_GRAPH.md",
+    "IMPLEMENTATION_PLAN.md",
+    "TEST_PLAN.md",
+    "SPEC_VERIFICATION.md"
+  ],
+  "aiGuardrailsRequiredWhen": [
+    "AI behavior",
+    "LLM orchestration",
+    "retrieval",
+    "PII",
+    "regulated domain advice",
+    "external data grounding"
+  ],
+  "acceptanceCriterionPattern": "AC-\\d{3}"
+}
+
