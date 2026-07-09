@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Codex Lead Agent SDD Traceability Flow</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --ink: #102033;
+      --muted: #5b6776;
+      --line: #d7e1ec;
+      --blue: #0f4c81;
+      --blue-strong: #2563eb;
+      --green: #157347;
+      --green-soft: #eaf7ef;
+      --amber: #a16207;
+      --amber-soft: #fff7df;
+      --shadow: 0 14px 34px rgba(15, 23, 42, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #eef5fb 0%, #fbfdff 100%);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .page {
+      width: min(1380px, 100%);
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .canvas {
+      background: var(--bg);
+      border: 1px solid #e3ebf4;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue-strong);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 880px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .badge {
+      padding: 10px 14px;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      background: #e8f2ff;
+      color: #1d4ed8;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr 1.15fr 0.95fr 1.05fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .stage {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      min-height: 245px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+    }
+
+    .stage::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -25px;
+      transform: translateY(-50%);
+      z-index: 2;
+      color: var(--blue-strong);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .stage:last-child::after {
+      content: "";
+    }
+
+    .stage h2 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .stage p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      border: 1px solid #e1e8f0;
+      border-radius: 9px;
+      background: #fbfdff;
+      padding: 9px 10px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .matrix {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .matrix-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .matrix-card h3 {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: 17px;
+    }
+
+    .matrix-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .trace-band {
+      margin-top: 24px;
+      padding: 20px;
+      border: 1px solid #c7ead4;
+      border-radius: 14px;
+      background: var(--green-soft);
+    }
+
+    .trace-band h2 {
+      margin: 0 0 14px;
+      color: var(--green);
+      font-size: 21px;
+    }
+
+    .trace-chain {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .trace-item {
+      min-height: 66px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #b9ddc8;
+      background: #ffffff;
+      color: #14532d;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .trace-arrow {
+      text-align: center;
+      color: var(--green);
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .outcome {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    .outcome-card {
+      background: var(--amber-soft);
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .outcome-card h2 {
+      margin: 0 0 10px;
+      color: var(--amber);
+      font-size: 20px;
+    }
+
+    .outcome-card p,
+    .outcome-card li {
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .outcome-card p {
+      margin: 0;
+    }
+
+    .outcome-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    @media (max-width: 1120px) {
+      .flow,
+      .matrix,
+      .outcome {
+        grid-template-columns: 1fr;
+      }
+
+      .stage::after {
+        top: auto;
+        right: 50%;
+        bottom: -28px;
+        transform: translateX(50%) rotate(90deg);
+      }
+
+      .trace-chain {
+        grid-template-columns: 1fr;
+      }
+
+      .trace-arrow {
+        transform: rotate(90deg);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding: 14px;
+      }
+
+      .canvas {
+        padding: 18px;
+      }
+
+      .header {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .badge {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="canvas" aria-labelledby="title">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Codex-Powered End-to-End Agentic Delivery</p>
+          <h1 id="title">How Codex Lead Agent Turns a Change Request Into Verified Implementation</h1>
+          <p class="subtitle">
+            This view shows how Codex was used as the Lead Agent to convert every business request into acceptance
+            criteria, plan by dependency, coordinate specialist agent work, test, trace, gate, and deploy with an
+            auditable evidence trail.
+          </p>
+        </div>
+        <div class="badge">Codex Lead Agent</div>
+      </header>
+
+      <section class="flow" aria-label="Lead agent delivery flow">
+        <article class="stage">
+          <span class="tag">1. Intake</span>
+          <h2>Codex Captures the Change</h2>
+          <p>Codex receives the business change and records the scope, source files, assumptions, and risks.</p>
+          <ul class="mini-list">
+            <li>Customer need or business problem</li>
+            <li>Known constraints and source artifacts</li>
+            <li>Open questions and safe assumptions</li>
+          </ul>
+        </article>
+
+        <article class="stage">
+          <span class="tag">2. SPEC</span>
+          <h2>Codex Authors the SPEC</h2>
+          <p>The SPEC is authored before code changes begin, then translated into stable acceptance criteria.</p>
+          <ul class="mini-list">
+            <li>SPEC.md captures the requirement</li>
+            <li>AC-001, AC-002, AC-003 define success</li>
+            <li>AI guardrails and privacy rules are documented</li>
+          </ul>
+        </article>
+
+        <article class="stage">
+          <span class="tag">3. Plan</span>
+          <h2>Codex Builds the Plan</h2>
+          <p>Codex builds the dependency graph first, then generates the implementation plan from it.</p>
+          <ul class="mini-list">
+            <li>What must happen first</li>
+            <li>Which agents own each workstream</li>
+            <li>How the change will be verified</li>
+          </ul>
+        </article>
+
+        <article class="stage">
+          <span class="tag">4. Build</span>
+          <h2>Codex Coordinates Build Agents</h2>
+          <p>Frontend, backend, AI orchestration, privacy, test, and traceability agents execute bounded work under Codex orchestration.</p>
+          <ul class="mini-list">
+            <li>React chat widget updates</li>
+            <li>.NET backend API changes</li>
+            <li>LLM grounding and fallback logic</li>
+          </ul>
+        </article>
+
+        <article class="stage">
+          <span class="tag">5. Verify</span>
+          <h2>Codex Verifies and Gates</h2>
+          <p>The change is not complete until Codex runs verification and the final SDD gate proves AC coverage.</p>
+          <ul class="mini-list">
+            <li>Build and automated tests</li>
+            <li>Traceability matrix updated</li>
+            <li>Final SDLC summary completed</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="matrix" aria-label="Traceability evidence">
+        <article class="matrix-card">
+          <h3>Acceptance Criteria</h3>
+          <p>Codex gives every requirement a clear AC ID, so business intent is measurable and testable.</p>
+        </article>
+
+        <article class="matrix-card">
+          <h3>Implementation Mapping</h3>
+          <p>Codex maps each AC to the actual frontend, backend, AI, privacy, or deployment files changed.</p>
+        </article>
+
+        <article class="matrix-card">
+          <h3>Test Evidence</h3>
+          <p>Codex maps each AC to automated checks or documented manual verification evidence.</p>
+        </article>
+
+        <article class="matrix-card">
+          <h3>Final Gate</h3>
+          <p>Codex can only declare completion after the final gate confirms nothing is left planned.</p>
+        </article>
+      </section>
+
+      <section class="trace-band" aria-label="End-to-end trace chain">
+        <h2>End-to-End Traceability Chain</h2>
+        <div class="trace-chain">
+          <div class="trace-item">Business Request</div>
+          <div class="trace-arrow">→</div>
+          <div class="trace-item">Codex SPEC + AC IDs</div>
+          <div class="trace-arrow">→</div>
+          <div class="trace-item">Codex Dependency Plan</div>
+          <div class="trace-arrow">→</div>
+          <div class="trace-item">Agent Implementation Files</div>
+          <div class="trace-arrow">→</div>
+          <div class="trace-item">Codex Automated Tests</div>
+          <div class="trace-arrow">→</div>
+          <div class="trace-item">Codex Final Gate + Deployment</div>
+        </div>
+      </section>
+
+      <section class="outcome" aria-label="Business outcome">
+        <article class="outcome-card">
+          <h2>Business Outcome</h2>
+          <p>
+            The project now has a repeatable Codex-driven delivery model where a business change request is converted
+            into controlled implementation with evidence from acceptance criteria through code, tests, and deployment.
+          </p>
+        </article>
+
+        <article class="outcome-card">
+          <h2>Why It Matters</h2>
+          <ul>
+            <li>Less ambiguity during delivery</li>
+            <li>Clear audit trail for every change</li>
+            <li>Reduced risk of AI hallucination</li>
+            <li>Reusable Codex process for future requests</li>
+          </ul>
+        </article>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
